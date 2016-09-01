@@ -1,7 +1,7 @@
 # grub2-signing-extension for GRUB2
 
 GRUB2 has got a function called "check\_signatures" which automatically checks if your GRUB2 files are signed and have a good signature. If the files aren't signed or have a bad signature GRUB2 won't run them to prevent running malicious software.
-The GRUB2 signing extension are some scripts which helps you to verify, sign and unsign your GRUB2 bootloader files using gpg. 
+The GRUB2 signing extension are some scripts which helps you to verify, sign and unsign your GRUB2 bootloader files using gpg.
 
 
 
@@ -10,8 +10,7 @@ The GRUB2 signing extension are some scripts which helps you to verify, sign and
 You need
 
 * GRUB2 ( sys-boot/grub:2 )
-* GNUpg < 2.1 ( < app-crypt/gnupg-2.1 )  
-For GNUpg >= 2.1 see branch [for-gpg-2.1](https://github.com/Bandie/grub2-signing-extension/tree/for-gpg-2.1)
+* GNUpg >= 2.1 ( >=app-crypt/gnupg-2.1 )
 
 
 
@@ -22,7 +21,7 @@ Before you can use the signing and verification feature you need to generate a k
 `# gpg --gen-key`
 
 
-To make gpg able to sign and verify files in a `su` environment we need to activate the gpg-agent for root. 
+To make gpg able to sign and verify files in a `su` environment we need to activate the gpg-agent for root.
 
 Edit the file _/root/.gnupg/gpg.conf_ and add the line `use-agent`.
 
@@ -38,7 +37,7 @@ Save the file and create _/root/.gnupg/gpg-agent.conf_ with the following conten
 
 First, export your public key.
 
-`# gpg --export -o ~/pubkey`
+`# gpg --export [email on the key] -o ~/pubkey`
 
 
 Next step, `mount /boot` and (re)install GRUB2. You need to install the public key into the core and instruct to load the modules `gcry_sha256` `gcry_dsa` and `gcry_rsa` at start. So you need the following arguments to install it this way
@@ -49,14 +48,14 @@ Next step, `mount /boot` and (re)install GRUB2. You need to install the public k
 Now download the grub2-signing-extension and run `make install` as root. You will now have `grub2-sign`, `grub2-unsign` and `grub2-verify` as runable scripts.
 
 
-To _enable_ GRUB2's check\_signatures feature insert the following content at the end of the file of */etc/grub.d/00_header* 
+To _enable_ GRUB2's check\_signatures feature insert the following content at the end of the file of */etc/grub.d/00_header*
 
     cat << EOF
     set check_signatures=enforce
     EOF
 
 
-Run `grub2-mkconfig -o /boot/grub/grub.cfg` to make the new configuration valid.
+Run `grub-mkconfig -o /boot/grub/grub.cfg` to make the new configuration valid.
 
 Now the time is come to sign your GRUB2 bootloader. Just run `grub2-sign`, enter your passphrase and that's it.
 
@@ -72,9 +71,9 @@ Now the time is come to sign your GRUB2 bootloader. Just run `grub2-sign`, enter
 
 If you didn't read the instruction above here is what the scripts does:
 
-* `grub2-sign` is signing the bootloader files with root's keypair.
-* `grub2-unsign` is removing the signatures of the bootloader files.
-* `grub2-verify` is checking if your signatures are good. If not, you will see which signature is bad.
+* `grub-sign` is signing the bootloader files with root's keypair.
+* `grub-unsign` is removing the signatures of the bootloader files.
+* `grub-verify` is checking if your signatures are good. If not, you will see which signature is bad.
 
 
 
@@ -82,18 +81,18 @@ If you didn't read the instruction above here is what the scripts does:
 
 ### I forgot to run grub2-unsign before I made changes. What now?
 
-Run `grub2-verify` to see, which signature is bad. Remove the signature and run `grub2-unsign`, after this `grub2-sign`.
+Run `grub-verify` to see, which signature is bad. Remove the signature and run `grub2-unsign`, after this `grub2-sign`.
 
 
 ### How can I switch off GRUB2's check_signature feature?
 
-Open */etc/grub.d/00_header* and remove the part 
+Open */etc/grub.d/00_header* and remove the part
 
     cat << EOF
     set check_signatures=enforce
     EOF
 
-Run `grub2-unsign` and `grub2-mkconfig -o /boot/grub/grub.cfg`.
+Run `grub-unsign` and `grub-mkconfig -o /boot/grub/grub.cfg`.
 
 
 ### Suddenly I can't boot! This is YOUR FAULT!
@@ -137,9 +136,9 @@ to
 The important changing is the flag *--unrestricted*.
 
 
-Run `grub2-unsign` to unsign the bootloader. 
+Run `grub-unsign` to unsign the bootloader.
 
-Then run `grub2-mkconfig -o /boot/grub/grub.cfg` to write the new config. 
+Then run `grub-mkconfig -o /boot/grub/grub.cfg` to write the new config.
 
-After this run `grub2-sign` again to sign the new changings.
+After this run `grub-sign` again to sign the new changings.
 

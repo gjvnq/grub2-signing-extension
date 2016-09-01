@@ -2,17 +2,17 @@
 # Author: Bandie Kojote (MeikoDis)
 # Licence: GNU-GPLv3
 
-all: 
+all:
 	@printf "Nothing to make. Run make install.\n"
 
 install:
-	cp ./sbin/grub2-verify /usr/sbin/
-	cp ./sbin/grub2-sign /usr/sbin/
-	cp ./sbin/grub2-unsign /usr/sbin/
-	chown root:root /usr/sbin/grub2-{verify,sign,unsign}
-	chmod 700 /usr/sbin/grub2-{verify,sign,unsign}
+	cp ./bin/grub-verify /usr/bin/
+	cp ./bin/grub-sign /usr/bin/
+	cp ./bin/grub-unsign /usr/bin/
+	chown root:root /usr/bin/grub-{verify,sign,unsign}
+	chmod ugo=rx /usr/bin/grub-{verify,sign,unsign}
 	@printf "Done.\n"
 
 uninstall:
-	rm /usr/sbin/grub2-{verify,sign,unsign}
+	rm /usr/bin/grub-{verify,sign,unsign}
 	@printf "Done.\n"

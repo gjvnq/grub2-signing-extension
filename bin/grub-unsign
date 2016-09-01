@@ -1,0 +1,29 @@
+#!/bin/bash
+# grub2-unsign
+# Unsigns every file in /boot. Depends on grub2-verify
+# Author: Bandie Kojote
+# Licence: GNU-GPLv3
+
+BOOT_DIR=$1
+
+if [ -z "$BOOT_DIR" ]; then
+    echo "Set boot dir as an argument"
+    exit 1
+fi
+
+# Check if something is wrong
+grub-verify "$BOOT_DIR"
+if [ $? -eq 1 ]
+then
+    echo -e "grub-verify has detected a one or more bad signatures.\nPlease check for malicious software before you're unsigning everything!"
+    exit 1
+fi
+
+
+# Then remove the signatures.
+for i in `find "$BOOT_DIR" -name "*.sig"`
+do
+	rm $i
+done
+echo "GRUB2 unsigned. WARNING: If you want to deactivate GRUB2's signature feature, change the check_signatures variable in the headers file!"
+exit 0
